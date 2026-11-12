@@ -1,0 +1,9 @@
+2026-11-12 20:27:56,825 - INFO - Iniciando validación criptográfica (Fase 1)...
+2026-11-12 20:27:56,829 - INFO - INTEGRIDAD OK: transacciones_tienda_este.csv movido a staging/verified/
+2026-11-12 20:27:56,830 - INFO - INTEGRIDAD OK: transacciones_tienda_norte.csv movido a staging/verified/
+2026-11-12 20:27:56,831 - WARNING - CORRUPCIÓN DETECTADA: transacciones_tienda_sur.csv movido a quarantine/tampered/
+2026-11-12 20:27:56,832 - INFO - Validación finalizada.
+2026-11-12 20:27:59,524 - INFO - Iniciando pipeline de saneamiento (Fase 2 y 3)...
+2026-11-12 20:27:59,528 - INFO - Dataset cargado. Registros iniciales: 100
+2026-11-12 20:27:59,539 - INFO - Limpieza finalizada. Registros válidos: 90, Registros en cuarentena: 10
+2026-11-12 20:27:59,541 - INFO - Métricas de perfilado exportadas a JSON.

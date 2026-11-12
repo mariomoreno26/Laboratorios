@@ -1,0 +1,16 @@
+{
+    "calidad_iso_25012": {
+        "tasa_completitud_porcentaje": 90.0,
+        "integridad_criptografica": {
+            "archivos_validados": 2,
+            "archivos_rechazados": 1
+        }
+    },
+    "distribucion_importe_eur": {
+        "media": 161.41,
+        "mediana": 74.48,
+        "desviacion_estandar": 528.78,
+        "percentil_25": 55.22,
+        "percentil_75": 88.57
+    }
+}
