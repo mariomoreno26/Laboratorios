@@ -1,0 +1,15 @@
+   #!/bin/bash
+  #Via primaria (binario nativo de java)
+   if [ -n "${JAVA_HOME:-}" ] && [ -x "$JAVA_HOME/bin/jps" ]; then
+     exec "$JAVA_HOME/bin/jps" "$@"
+   fi
+   #via secundaria (Respaldo por Inspección de /proc en Linux)
+   for d in /proc/[0-9]*; do
+     [ -r "$d/cmdline" ] || continue
+     cmd=$(tr '\0' ' ' < "$d/cmdline" 2>/dev/null) || continue
+     case "$cmd" in *java*) ;; *) continue ;; esac
+     name=$(echo "$cmd" | grep -o 'org\.apache\.hadoop\.[A-Za-z0-9_.]*' | tail -1)
+     name=${name##*.}
+     echo "${d#/proc/} ${name:-Java}"
+   done
+   echo "$$ Jps"jps

@@ -1,0 +1,38 @@
+name: iabd-hadoop
+
+services:
+  hadoop:
+    build:
+      context: ./hadoop
+    image: iabd/hadoop-lab:3.4.0
+    container_name: hadoop-lab
+    hostname: hadoop-lab
+    ports:
+      - "9870:9870"   # NameNode Web UI
+      - "8088:8088"   # YARN ResourceManager Web UI
+      - "9864:9864"   # DataNode Web UI
+    volumes:
+      - ./datos:/workspace          # CSV compartidos con el equipo anfitrión
+      - hdfs-data:/hadoop/dfs       # persistencia de HDFS entre reinicios
+    healthcheck:
+      test: ["CMD-SHELL", "hdfs dfsadmin -safemode get | grep -q 'Safe mode is OFF'"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 40s
+    restart: unless-stopped
+
+  # Bloque A (opcional): Python + pandas para sanear el CSV.
+  # Se arranca solo a demanda:  docker compose --profile bloque-a run --rm python bash
+  python:
+    image: python:3.12-slim
+    container_name: python-lab
+    profiles: ["bloque-a"]
+    working_dir: /scripts
+    volumes:
+      - ./datos:/workspace
+      - ./scripts:/scripts
+    command: ["sleep", "infinity"]
+
+volumes:
+  hdfs-data:

@@ -1,0 +1,3 @@
+# Datasets pesados fuera del repositorio (se conserva .gitkeep)
+datos/*
+!datos/.gitkeep
