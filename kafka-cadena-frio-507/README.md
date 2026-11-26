@@ -94,7 +94,9 @@ pip install -r requirements.txt
 Kafka al crear pocos ficheros de registro en vez de escribir miles de diminutos JSON, lo que elimina la sobrecarga de datos y permite desacoplar la ingesta en tiempo real
 
 ### 4.2. Claves y paralelismo
-*(Pega aquí tu respuesta sobre eliminar `key` y añadir una 4.ª instancia con 3 particiones)*
+Si enviáramos los mensajes sin clave (`key=None`), Kafka dejaría de aplicar el hash determinista por camión y repartiría los eventos entre las 3 particiones mediante balanceo por turnos . Dado que Kafka únicamente garantiza el orden estricto de los mensajes dentro de una misma partición y no entre particiones distintas, las lecturas de un mismo vehículo  acabarían  en diferentes particiones y podrían procesarse desordenadas en el tiempo.
+
+En Kafka, la unidad máxima de paralelismo dentro de un mismo grupo es la partición (una partición solo puede asignarse a un único consumidor del grupo de forma simultánea). Al mantener 3 particiones en `telemetria-frio` y conectar 4 consumidores en `grupo-alertas-frio`, tres instancias leerán una partición cada una y la cuarta quedará inactiva, sin recibir mensajes, actuando únicamente como nodo de respaldo en caso de que caiga alguno de los otros tres.
 
 ### 4.3. Puente hacia Apache Spark (`KAFKA_ADVERTISED_LISTENERS`)
-*(Pega aquí tu respuesta sobre la separación de listeners externo `localhost:9092` e interno `kafka:29092`)*
+Para que coexistan el acceso externo desde Windows (`localhost:9092`) y el acceso interno entre contenedores Docker (`kafka:29092` / red interna) sin conflictos de resolución DNS, es necesario configurar dos *listeners* independientes en puertos distintos dentro de `docker-compose.yml`:KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
